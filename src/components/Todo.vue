@@ -14,10 +14,12 @@ export default {
   setup() {
     const result = useQuery({
       query: todosQuery,
-
-  
-    },
-    );
+      context: {
+        fetchOptions: () => {
+          return { headers: { 'x-hasura-admin-secret' : 'ViR8RukbTpJAIfgMUFgUXfOUAJt0EA4mymD8hYWzUTNByJ6LGhu5N12XXFr3sQIv' } }
+        }
+      }
+    });
 
     return {
       fetching: result.fetching,
