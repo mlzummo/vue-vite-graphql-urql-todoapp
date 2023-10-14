@@ -4,15 +4,16 @@ import { ref } from 'vue';
 
 import type { VueElement } from 'vue';
 export default {
-  data() {
-    return {
-      title: '',
-    };
-  },
+
+
+//  data() {
+//     return {
+//       title: '',
+//     };
+//   },
   setup() {
 
-    // const title = ref(0);
-    const id = 1;
+    const title = ref('');
 
     const updateTodoResult = useMutation(gql`
       mutation($id: ID!, $title: String!) {
@@ -33,9 +34,13 @@ export default {
           // It is an OperationResult.
         });
       },
-      addToDo(data: any) {
-        console.log(data)
-      }
+      addToDo(e: Event) {
+        e.preventDefault();
+        console.log(title)
+        console.log(title.value)
+        
+      },
+      title
     };
   }
 
@@ -45,9 +50,9 @@ export default {
 
 <template>
     <div>
-      <form>
+      <form @submit="addToDo">
         <input type="text" name="title" v-model="title"> <!-- v-model="title"-->
-        <button  @click="addToDo" type="submit">Submit</button>
+        <button type="submit">Submit</button>
       </form>
     </div>
   </template>
