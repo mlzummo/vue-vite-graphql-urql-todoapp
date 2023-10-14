@@ -1,7 +1,7 @@
 <script lang="ts">
 import { gql, useQuery } from '@urql/vue';
-// import { useToast } from "primevue/usetoast";
-import CreateTodo from "./AddTodo.vue";
+import { useToast } from "primevue/usetoast";
+import AddTodo from './AddTodo.vue';
 
   const todosQuery = gql`
           query {
@@ -14,7 +14,7 @@ import CreateTodo from "./AddTodo.vue";
   
 export default {
   components: {
-    CreateTodo // gotta make sure of this
+    AddTodo
   },
   setup() {
     // https://github.com/urql-graphql/urql/discussions/1950
@@ -40,10 +40,7 @@ export default {
 </script>
 
 <template>
-  <div>
-    <CreateTodo />
-  </div>
- <!-- i wann add toast here??-->
+    <Toast /> <!-- we will try it here for now-->
     <div v-if="fetching">
       Loading...
     </div>
@@ -55,5 +52,8 @@ export default {
         <li v-for="todo in data.todos" :key="todo.id">{{ todo.title }}</li>
       </ul>
     </div>
+
+    <div>create todo</div>
+    <AddTodo />
   </template>
   
