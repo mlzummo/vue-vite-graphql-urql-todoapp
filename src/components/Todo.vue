@@ -1,5 +1,7 @@
 <script lang="ts">
 import { gql, useQuery } from '@urql/vue';
+// import { useToast } from "primevue/usetoast";
+import CreateTodo from "./AddTodo.vue";
 
   const todosQuery = gql`
           query {
@@ -11,6 +13,9 @@ import { gql, useQuery } from '@urql/vue';
   `;
   
 export default {
+  components: {
+    CreateTodo // gotta make sure of this
+  },
   setup() {
     // https://github.com/urql-graphql/urql/discussions/1950
     // https://formidable.com/open-source/urql/docs/basics/vue/#context-options
@@ -35,6 +40,10 @@ export default {
 </script>
 
 <template>
+  <div>
+    <CreateTodo />
+  </div>
+ <!-- i wann add toast here??-->
     <div v-if="fetching">
       Loading...
     </div>
