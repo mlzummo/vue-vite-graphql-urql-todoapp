@@ -1,48 +1,23 @@
 <script lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import Todo from './components/Todo.vue'
-// import Login from './components/Login.vue'
-import AuthLayout from "./layouts/Center.vue";
-// import DashboardLayout from "./layouts/DashboardLayout.vue";
+// This starter template is using Vue 3 <script setup> SFCs
+// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
+// import HelloWorld from './components/HelloWorld.vue'
+import DefaultLayout from "./layouts/DefaultLayout.vue";
 
 export default {
-  components: {
-    AuthLayout,
-    // DashboardLayout,
-  },
-  data() {
-    return {
-      layout: '',
-    };
-  },
-  watch: {
-    $route(to) {
-      // set layout by route meta
-      if (to.meta.layout !== undefined) {
-        this.layout = to.meta.layout
-      } else {
-        this.layout = "AuthLayout" // this is default layout if route meta is not set
-      }
-    },
-  },
-};
+    name: 'App',
+    computed: {
+        layout(): any {
+            return (this.$route.meta.layer || DefaultLayout) + '-layout'
+        }
+    }
+}
 </script>
 
 <template>
-  <!-- <header>
-    <imgS alt="Vue logo" class="logo" src="./assets/logo.svg" width="150" height="150" />
-
-    <div class="wrapper">
-      <HelloWorld />
-      <Todo />
-    </div>
-  </header> -->
-
-  <component :is="layout" />
-  </template>
-
-  <!-- <header>
-
-</header> -->
-
+    <component :is="layout">
+        <router-view  /> 
+    </component>
+        <!-- <component :is="$route.meta.layout || 'div'"> </component> -->
+</template>
 
