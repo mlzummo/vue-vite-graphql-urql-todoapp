@@ -9,6 +9,7 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@types/vue": "^2.0.0",
     "@urql/vue": "^1.1.2",
     "graphql": "^16.8.1",
     "primeflex": "^3.3.1",

@@ -7,15 +7,11 @@ export default defineComponent({
 </script>
 
 <template>
-    <v-layout>
-        <v-main>
-          <!--The <slot> element is a slot outlet that indicates 
-                where the "VIEW" content should be rendered.-->
+<!-- <div>test</div> -->
                 <header>
-            <slot />
+                    <router-view />
                 </header>
-        </v-main>
-    </v-layout>
+
 </template>
 
 <style scoped>
