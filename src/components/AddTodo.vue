@@ -24,9 +24,13 @@ export default {
       }
     `);
 
+
+
+    // figure out what this means:
     const AddTodo = gql`
-      mutation {
-        insert_todos(objects: [{ title: "Learn GraphQL" }]) {
+
+      mutation($title: String!) {
+        insert_todos(objects: [{ title: $title }]) {
           returning {
             id
             created_at
@@ -61,9 +65,12 @@ export default {
             return { headers: { 'x-hasura-admin-secret' : 'ViR8RukbTpJAIfgMUFgUXfOUAJt0EA4mymD8hYWzUTNByJ6LGhu5N12XXFr3sQIv' } } //todo dynamic
           }
         }
+
+        const variables = { title: title.value };
       
-        InsertTodo.executeMutation({},context).then(result => {
+        InsertTodo.executeMutation(variables,context).then(result => {
           console.log('hjere atleastrr')
+          console.log(result);
         });
       },
       title
