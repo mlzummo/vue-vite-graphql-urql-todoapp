@@ -1,7 +1,7 @@
 <script lang="ts">
 import { gql, useQuery } from '@urql/vue';
 import { useToast } from "primevue/usetoast";
-import AddTodo from './AddTodo.vue';
+// import AddTodo from './AddTodo.vue';
 
   const todosQuery = gql`
           query {
@@ -14,7 +14,7 @@ import AddTodo from './AddTodo.vue';
   
 export default {
   components: {
-    AddTodo
+    // AddTodo
   },
   setup() {
     // https://github.com/urql-graphql/urql/discussions/1950
@@ -54,6 +54,6 @@ export default {
     </div>
 
     <div>create todo</div>
-    <AddTodo />
+    <!-- <AddTodo /> -->
   </template>
   
