@@ -6,11 +6,11 @@ import type { VueElement } from 'vue';
 export default {
 
 
-//  data() {
-//     return {
-//       title: '',
-//     };
-//   },
+ data() {
+    return {
+      title: '',
+    };
+  },
   setup() {
 
     const context: Partial<OperationContext> = { // todo: abstract
@@ -25,24 +25,25 @@ export default {
         }
 
     const title = ref('');
+    const newData = ref('');
 
-    const updateTodoResult = useMutation(gql`
-      mutation($id: ID!, $title: String!) {
-        updateTodo(id: $id, title: $title) {
-          id
-          title
-        }
-      }
-    `);
+    // const updateTodoResult = useMutation(gql`
+    //   mutation($id: ID!, $title: String!) {
+    //     updateTodo(id: $id, title: $title) {
+    //       id
+    //       title
+    //     }
+    //   }
+    // `);
 
-    const updateTodo = gql`
-      mutation($id: ID!, $title: String!) {
-        update_todos(id: $id, title: $title) {
-          id
-          title
-        }
-      }
-    `;
+    // const updateTodo = gql`
+    //   mutation($id: String!, $title: String!) {
+    //     update_todos(id: $id, title: $title) {
+    //       id
+    //       title
+    //     }
+    //   }
+    // `;
 
     // figure out what this means:
     const AddTodo = gql`
@@ -56,18 +57,59 @@ export default {
       }
     `;
 
-    const InsertTodo = useMutation(AddTodo);
-    const UpdateTodo = useMutation(updateTodo);
+    // const updateTodo = gql`
+    //   mutation($id: String!, $title: String!) {
+    //     update_todos(id: $id, title: $title) {
+    //       returning {
+    //         id
+    //         created_at
+    //       }
+    //   }
+    //   }
+    // `;
 
+    // const AddTodo = gql`
+    //   mutation UpdateTodo($id: Int!, $title: String!) {
+    //     update_todos(where: {id: { _eq: $id } }, _set: {title: $title }) {
+    //       returning {
+    //         id
+    //         created_at
+    //       }
+    //     }
+    //   }
+    // `;
+
+
+    /// new
+
+    const newUpdate = gql`
+      mutation UpdateRecord($id: ID!, $newData: any!) {
+        update_todos(where: { id: { _eq: $id } }, _set: $title) {
+          affected_rows
+        }
+      }
+    `;
+
+
+  // Execute
+
+    const InsertTodo = useMutation(AddTodo);
+    // const UpdateTodo = useMutation(updateTodo);
+    // const UpdateTodo2 = useMutation(newUpdate);
+    // const UpdateTod2 = useMutation(updateTodo);
+    // const newUpdate2 = useMutation(newUpdate)
+
+
+    const NewUpdate = useMutation(newUpdate);
     return {
-      updateTodo(id : any, title: any) {
-        const variables = { id: 4 , title: title };
-        updateTodoResult.executeMutation(variables).then(result => {
-          // The result is almost identical to `updateTodoResult` with the exception
-          // of `result.fetching` not being set and its properties not being reactive.
-          // It is an OperationResult.
-        });
-      },
+      // updateTodo(id : any, title: any) {
+      //   const variables = { id: 4 , title: title };
+      //   updateTodo.executeMutation(variables).then(result => {
+      //     // The result is almost identical to `updateTodoResult` with the exception
+      //     // of `result.fetching` not being set and its properties not being reactive.
+      //     // It is an OperationResult.
+      //   });
+      // },
       addToDo(e: Event) {
         e.preventDefault();
         console.log(title)
@@ -78,22 +120,32 @@ export default {
         const variables = { title: title.value };
       
         InsertTodo.executeMutation(variables,context).then(result => {
-          console.log('hjere atleastrr')
+          console.log('Inserted Value')
           console.log(result);
         });
 
-        const update = { id: "1", title: "this is line 85 we def updated this" };
+        
+        // const update = { id: 1, title: "this is line 85 we def updated this" };
+
+        // newUpdate2.executeMutation(update, context).then(result => {
+        //   console.log('Updating: Delete 0')
+        //   console.log(result)
+        // });
 
 
-        UpdateTodo.executeMutation(update, context).then(result => {
-          console.log('Updating: Record 0')
-          console.log(result)
-        })
-      },
-      title, 
-    };
+
+
+
+      //   UpdateTodo2.executeMutation(newUpdateVariables ,context).then(result => {
+      //     console.log("here");
+      //     console.log(result);
+      //   })
+      // },
+     
+    },
+    title, 
   }
-
+}
 
 };
 </script>
