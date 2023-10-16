@@ -61,7 +61,7 @@ export default {
 
     return {
       updateTodo(id : any, title: any) {
-        const variables = { id: 1 , title: title };
+        const variables = { id: 4 , title: title };
         updateTodoResult.executeMutation(variables).then(result => {
           // The result is almost identical to `updateTodoResult` with the exception
           // of `result.fetching` not being set and its properties not being reactive.
