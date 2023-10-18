@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 
+import Card from 'primevue/card';
+import Panel from 'primevue/card'
+
 const props = defineProps({
   itemId: String,
   title: String,
@@ -23,6 +26,7 @@ function onActionItemUpdate() {
 </script>
 
 <template>
+  <!-- <Panel> -->
   <div class="card" id="actionItemCard" style="width: 100%">
     <div class="card-body">
       <!-- Edit Mode -->
@@ -72,6 +76,7 @@ function onActionItemUpdate() {
       </div>
     </div>
   </div>
+<!-- </Panel> -->
 </template>
 
 <style>

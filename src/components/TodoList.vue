@@ -86,7 +86,7 @@ function onActionItemUpdate(itemId, title, description) { //update
 
 <template>
 
-  <pre style="display:block"> <!-- keep hidding when not debugging-->
+  <pre style="display:none"> <!-- keep hidding when not debugging-->
     {{  data }}
   </pre>
   <!-- <div class="container overflow-hidden">
@@ -119,7 +119,7 @@ function onActionItemUpdate(itemId, title, description) { //update
       </template>
   </Card>
 
-  <Card style="width: 25em" class="p-sm">
+  <Card style="width: 25em" class="p-sm todos-card">
       <template #header>
           <img alt="user header" width="100" src="https://cdn2.iconfinder.com/data/icons/task-board/100/taskboard_task_board_plan_schedule_list_-10-1024.png" />
       </template>
@@ -127,25 +127,34 @@ function onActionItemUpdate(itemId, title, description) { //update
       <template #subtitle>v. 0.0.86</template> -->
       <!-- <ScrollPanel style="width: 300px; height: 200px;"> -->
       <template #content>
-        <ScrollPanel style="width: 300px; height: 400px;"> 
-        <div v-if="Object.keys(actionItems).length == 0">
-          <h4 class="text-center" style="color: rgb(150, 150, 150)">Empty</h4>
-        </div>
-        <div
-          v-else
-          class="col-12"
-          v-for="(actionItem, key) in actionItems"
-          :key="key"
-        >
-          <ActionItem
-            :itemId="key"
-            :title="actionItem.title"
-            :description="actionItem.description"
-            @delete="onActionItemDelete"
-            @update="onActionItemUpdate"
-          />
-        </div>
-      </ScrollPanel>
+        <ScrollPanel style="width: 100%; height: 200px" class="custombar1">
+
+          <!--  -->
+            <div class="content">
+             
+            <div v-if="Object.keys(actionItems).length == 0">
+              <h4 class="text-center" style="color: rgb(150, 150, 150)">Empty</h4>
+            </div>
+            <div
+              v-else
+              class="col-12"
+              v-for="(actionItem, key) in actionItems"
+              :key="key"
+            >
+            
+              <ActionItem
+                :itemId="key"
+                :title="actionItem.title"
+                :description="actionItem.description"
+                @delete="onActionItemDelete"
+                @update="onActionItemUpdate"
+              />
+            
+            </div>
+         
+            </div>
+          </ScrollPanel>
+        
       </template>
       <!--  -->
       <template #footer>
@@ -192,4 +201,23 @@ function onActionItemUpdate(itemId, title, description) { //update
 </template>
 
 <style>
+
+/* .todos-card, .content {
+  overflow-y: scroll;
+}  */
+.content {
+  overflow-y: scroll;
+} 
+
+.p-scrollpanel .p-scrollpanel-bar  {
+  background:#4f83b7 !important;
+
+}
+
+.p-scrollpanel-bar {
+  opacity: 1
+}
+
+
+
 </style>
