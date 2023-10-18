@@ -9,6 +9,8 @@
         "./*"
        ]
     }
+    ,
+    "allowJs": true
   },
 
   "references": [

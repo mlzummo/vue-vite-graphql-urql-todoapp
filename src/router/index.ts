@@ -3,7 +3,7 @@ import { createWebHistory, createRouter, type RouteRecordRaw } from "vue-router"
 import Login from "../components/Login.vue";
 import Todo from "../components/Todo.vue";
 import DefaultLayout from "../layouts/DefaultLayout.vue";
-
+import TodoList from "../components/TodoList.vue";
 
 const routes: Array<RouteRecordRaw> = [
         // { 
@@ -33,7 +33,14 @@ const routes: Array<RouteRecordRaw> = [
             meta: { 
                 layout: DefaultLayout 
             }
-         }
+         },
+         {
+            path: "/demo",
+            component: TodoList,
+            meta: {
+                layout: DefaultLayout
+            }
+        }
 ]
 
 export const router = createRouter({
