@@ -82,13 +82,7 @@ export default {
 
     /// new
 
-    const newUpdate = gql`
-      mutation UpdateRecord($id: ID!, $newData: any!) {
-        update_todos(where: { id: { _eq: $id } }, _set: $title) {
-          affected_rows
-        }
-      }
-    `;
+
 
 
   // Execute
@@ -100,7 +94,7 @@ export default {
     // const newUpdate2 = useMutation(newUpdate)
 
 
-    const NewUpdate = useMutation(newUpdate);
+  
     return {
       // updateTodo(id : any, title: any) {
       //   const variables = { id: 4 , title: title };

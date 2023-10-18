@@ -1,6 +1,9 @@
 <script setup> // js here?
 // import "bootstrap/dist/css/bootstrap.min.css";
+import { gql, useMutation, useQuery} from '@urql/vue';
+
 import Card from 'primevue/card';
+import ScrollPanel from 'primevue/scrollpanel';
 
 import { ref } from "vue";
 
@@ -28,9 +31,64 @@ function onActionItemUpdate(itemId, title, description) { //update
     description: description,
   };
 }
+
+// new
+
+
+    // https://github.com/urql-graphql/urql/discussions/1950
+    // https://formidable.com/open-source/urql/docs/basics/vue/#context-options
+
+
+    const todosQuery = gql`
+          query {
+              todos {
+              id
+              title
+              }
+          }
+  `;
+
+    const result = useQuery({
+      query: todosQuery,
+      context: {
+        fetchOptions: () => {
+          return { headers: { 'x-hasura-admin-secret' : 'ViR8RukbTpJAIfgMUFgUXfOUAJt0EA4mymD8hYWzUTNByJ6LGhu5N12XXFr3sQIv' } } //todo dynamic
+        }
+      }
+    });
+
+    result.executeQuery().then(result => {
+      // console.log(result)
+      let raw = result.data._rawValue.todos; // TODO: find a better way of accessing this
+      console.log(raw)
+      actionItems.value = raw
+
+    });
+
+
+    // onActionItemCreate
+    let data = {
+      fetching: result.fetching,
+      data: result.data,
+      error: result.error,
+    };
+
+    // result.todos.foreach((todo) => {
+    // console.log(todo)
+    // })
+
+    // data.forEach((row) => {
+    //   onActionItemCreate(row.title, 'test desc')
+    // })
+    console.log(result)
+    //  actionItems = result.data.todos;
 </script>
 
 <template>
+
+  <pre style="display:block"> <!-- keep hidding when not debugging-->
+    {{  data }}
+  </pre>
   <!-- <div class="container overflow-hidden">
     <div class="row">
       <div class="col-12">
@@ -39,7 +97,7 @@ function onActionItemUpdate(itemId, title, description) { //update
     </div> -->
 
 
-
+  
 
     
 <div class="card flex align-items-center justify-content-center">
@@ -48,7 +106,7 @@ function onActionItemUpdate(itemId, title, description) { //update
       <template #header>
           <img width="100" alt="user header" src="https://upload.wikimedia.org/wikipedia/commons/6/67/Microsoft_To-Do_icon.png" />
       </template>
-      <template #title>Insert Card</template>
+      <template #title>Insert Todo</template>
       <template #subtitle>v. 0.0.86</template>
       <template #content>
           <p>
@@ -67,7 +125,9 @@ function onActionItemUpdate(itemId, title, description) { //update
       </template>
       <!-- <template #title>Insert Card</template>
       <template #subtitle>v. 0.0.86</template> -->
+      <!-- <ScrollPanel style="width: 300px; height: 200px;"> -->
       <template #content>
+        <ScrollPanel style="width: 300px; height: 400px;"> 
         <div v-if="Object.keys(actionItems).length == 0">
           <h4 class="text-center" style="color: rgb(150, 150, 150)">Empty</h4>
         </div>
@@ -85,7 +145,9 @@ function onActionItemUpdate(itemId, title, description) { //update
             @update="onActionItemUpdate"
           />
         </div>
+      </ScrollPanel>
       </template>
+      <!--  -->
       <template #footer>
           <Button icon="pi pi-check" label="Create" />
           <!-- <Button icon="pi pi-times" label="Cancel" severity="secondary" style="margin-left: 0.5em" /> -->
