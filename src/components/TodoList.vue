@@ -14,19 +14,56 @@ import ActionItem from "./ActionItem.vue";
 const actionItems = ref({});
 const growingId = ref(0);
 
+const context =  { 
+        fetchOptions: () => {
+          return { headers: { 'x-hasura-admin-secret' : 'ViR8RukbTpJAIfgMUFgUXfOUAJt0EA4mymD8hYWzUTNByJ6LGhu5N12XXFr3sQIv' } } //todo dynamic
+        }
+    };
+
+const AddTodoQuery = gql`
+      mutation($title: String!) {
+        insert_todos(objects: [{ title: $title }]) {
+          returning {
+            id
+            created_at
+          }
+        }
+      }
+    `;
+
+    const InsertTodo = useMutation(AddTodoQuery);
 
 function onActionItemCreate(title, description) { //create
-  let newId = growingId.value++; 
-  actionItems.value[newId] = {
-    title: title,
-    description: description,
-  };
+
+  const variables = { title: title,  };
+      
+      InsertTodo.executeMutation(variables,context).then(result => {
+        console.log('Inserted Value')
+        console.log(result);
+
+        // did this logic because a non refresh create new would not delete propertly
+        let newItem = result.data.insert_todos.returning[0]; // this is what the database retured (ex: id 107)
+        let id = newItem.id
+        let newId = growingId.value++; //this is for the logical (local) key for the component (ex: id= 7 (list is 7 items long now)) ()
+        actionItems.value[newId] = {
+          id: id,
+          title: title,
+        
+        };
+
+      });
+
+
 }
 
 const DeleteTodoQuery = gql`
   mutation($id: Int!) {
     delete_todos(where: { id: { _eq: $id } }) {
-      affected_rows
+      affected_rows,
+      returning {
+            id
+            created_at
+          }
     }
   }
 `;
@@ -42,17 +79,17 @@ const onActionItemDelete = (itemId, index) => {
   
 
     let variables = { id: itemId };
-    let context =  { 
-        fetchOptions: () => {
-          return { headers: { 'x-hasura-admin-secret' : 'ViR8RukbTpJAIfgMUFgUXfOUAJt0EA4mymD8hYWzUTNByJ6LGhu5N12XXFr3sQIv' } } //todo dynamic
-        }
-    };
+
     console.log('variables')
     console.log(variables)
     DeleteTodo.executeMutation(
       variables,
       context,
     ).then(result => {
+
+      // check to see if the affected rows is 1 before running the below
+
+
         delete actionItems.value[index];
         console.log('delete result::')
         console.log(result)
@@ -111,6 +148,7 @@ function onActionItemUpdate(itemId, title, description) { //update
       // actionItems = raw
       // console.log(typeof(raw))
       for (let i = 0; i < raw.length; i++) {
+              let newId = growingId.value++; 
               let item = raw[i]
               actionItems.value[i] = {
                 id: item.id,
@@ -150,7 +188,7 @@ function onActionItemUpdate(itemId, title, description) { //update
 
 <template>
 
-  <pre style="display:none"> <!-- keep hidding when not debugging-->
+  <pre style="display:flex"> <!-- keep hidding when not debugging-->
     {{  blah.data }}
   </pre>
   <!-- <div class="container overflow-hidden">
