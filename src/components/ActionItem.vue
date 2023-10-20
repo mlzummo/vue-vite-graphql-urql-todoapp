@@ -5,7 +5,8 @@ import Card from 'primevue/card';
 import Panel from 'primevue/card'
 
 const props = defineProps({
-  itemId: String,
+  index: String, // this is the "key value were going to pass"
+  itemId: Number,
   title: String,
   description: String,
 });
@@ -15,8 +16,11 @@ const isEditing = ref(false);
 const editableTitle = ref(props.title);
 const editableDescription = ref(props.description);
 
-function onDelete() {
-  emit('delete', props.itemId);
+function onDelete(data: any) {
+  console.log('-----props------')
+  console.log(props.index)
+  console.log(data)
+  emit('delete', props.itemId, props.index);
 }
 
 function onActionItemUpdate() {
@@ -26,6 +30,7 @@ function onActionItemUpdate() {
 </script>
 
 <template>
+  <li>
   <!-- <Panel> -->
   <div class="card" id="actionItemCard" style="width: 100%">
     <div class="card-body">
@@ -67,7 +72,7 @@ function onActionItemUpdate() {
         </p>
         <div class="row justify-content-end">
           <div class="col-2 text-center">
-            <button type="button" class="btn btn-outline-danger" @click="onDelete">Delete</button>
+            <button type="button" class="btn btn-outline-danger" @click="onDelete(index)">Delete</button>
           </div>
           <div class="col-2 text-center">
             <button type="button" class="btn btn-link" @click="isEditing = true">Edit</button>
@@ -77,7 +82,12 @@ function onActionItemUpdate() {
     </div>
   </div>
 <!-- </Panel> -->
+</li>
 </template>
 
-<style>
+<style scoped>
+li {
+  border: 2px solid black;
+}
+
 </style>

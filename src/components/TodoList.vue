@@ -1,9 +1,10 @@
 <script setup> // js here?
 // import "bootstrap/dist/css/bootstrap.min.css";
-import { gql, useMutation, useQuery} from '@urql/vue';
-
+import { gql, useMutation, useQuery } from '@urql/vue';
 import Card from 'primevue/card';
 import ScrollPanel from 'primevue/scrollpanel';
+import Listbox from 'primevue/listbox';
+
 
 import { ref } from "vue";
 
@@ -13,17 +14,60 @@ import ActionItem from "./ActionItem.vue";
 const actionItems = ref({});
 const growingId = ref(0);
 
+
 function onActionItemCreate(title, description) { //create
-  let newId = growingId.value++;
+  let newId = growingId.value++; 
   actionItems.value[newId] = {
     title: title,
     description: description,
   };
 }
 
-function onActionItemDelete(itemId) { //delete
-  delete actionItems.value[itemId]
-}
+const DeleteTodoQuery = gql`
+  mutation($id: Int!) {
+    delete_todos(where: { id: { _eq: $id } }) {
+      affected_rows
+    }
+  }
+`;
+const DeleteTodo = useMutation(DeleteTodoQuery);
+
+const onActionItemDelete = (itemId, index) => {
+
+  console.log('-----data------')
+  console.log('itemId: '+ itemId + ' key:' + index)
+  console.log(actionItems)
+  console.log(actionItems.value)
+ 
+  
+
+    let variables = { id: itemId };
+    let context =  { 
+        fetchOptions: () => {
+          return { headers: { 'x-hasura-admin-secret' : 'ViR8RukbTpJAIfgMUFgUXfOUAJt0EA4mymD8hYWzUTNByJ6LGhu5N12XXFr3sQIv' } } //todo dynamic
+        }
+    };
+    console.log('variables')
+    console.log(variables)
+    DeleteTodo.executeMutation(
+      variables,
+      context,
+    ).then(result => {
+        delete actionItems.value[index];
+        console.log('delete result::')
+        console.log(result)
+        // let raw = result.data._rawValue.todos; // TODO: find a better way of accessing this
+        // console.log(raw)
+        // actionItems.value = raw
+        console.log('index: ' + index)
+        console.log(actionItems);
+        //delete actionItems.value[index];
+        console.log(actionItems);
+    });
+};
+
+// function onActionItemDelete(itemId, index) { //delete
+// }
 
 function onActionItemUpdate(itemId, title, description) { //update
   actionItems.value[itemId] = {
@@ -31,6 +75,8 @@ function onActionItemUpdate(itemId, title, description) { //update
     description: description,
   };
 }
+
+
 
 // new
 
@@ -44,6 +90,7 @@ function onActionItemUpdate(itemId, title, description) { //update
               todos {
               id
               title
+              description
               }
           }
   `;
@@ -57,17 +104,30 @@ function onActionItemUpdate(itemId, title, description) { //update
       }
     });
 
-    result.executeQuery().then(result => {
+    result.then(result => {
       // console.log(result)
-      let raw = result.data._rawValue.todos; // TODO: find a better way of accessing this
-      console.log(raw)
-      actionItems.value = raw
+      let raw = result.data._rawValue.todos // TODO: find a better way of accessing this
+      // console.log(raw)
+      // actionItems = raw
+      // console.log(typeof(raw))
+      for (let i = 0; i < raw.length; i++) {
+              let item = raw[i]
+              actionItems.value[i] = {
+                id: item.id,
+                title: item.title,
+                description: item.description,
+              };
+      }
+      // actionItems.value[newId] = {
+      //   title: title,
+      //   description: description,
+      // };
 
     });
 
 
     // onActionItemCreate
-    let data = {
+    let blah = {
       fetching: result.fetching,
       data: result.data,
       error: result.error,
@@ -80,14 +140,18 @@ function onActionItemUpdate(itemId, title, description) { //update
     // data.forEach((row) => {
     //   onActionItemCreate(row.title, 'test desc')
     // })
-    console.log(result)
+    // console.log(result.data.todos)
+    // console.log('data')
+    // console.log(blah)
+
+    
     //  actionItems = result.data.todos;
 </script>
 
 <template>
 
   <pre style="display:none"> <!-- keep hidding when not debugging-->
-    {{  data }}
+    {{  blah.data }}
   </pre>
   <!-- <div class="container overflow-hidden">
     <div class="row">
@@ -131,26 +195,28 @@ function onActionItemUpdate(itemId, title, description) { //update
 
           <!--  -->
             <div class="content">
-             
-            <div v-if="Object.keys(actionItems).length == 0">
-              <h4 class="text-center" style="color: rgb(150, 150, 150)">Empty</h4>
-            </div>
-            <div
-              v-else
-              class="col-12"
-              v-for="(actionItem, key) in actionItems"
-              :key="key"
-            >
-            
-              <ActionItem
-                :itemId="key"
-                :title="actionItem.title"
-                :description="actionItem.description"
-                @delete="onActionItemDelete"
-                @update="onActionItemUpdate"
-              />
-            
-            </div>
+             <ul>
+                <div v-if="Object.keys(actionItems).length == 0">
+                  <h4 class="text-center" style="color: rgb(150, 150, 150)">Empty</h4>
+                </div>
+                <div
+                  v-else
+                  class="col-12"
+                  v-for="(item, key) in actionItems"
+                  :key="key"
+                >
+                
+                  <ActionItem
+                    :index="key"
+                    :itemId="item.id"
+                    :title="item.title"
+                    :description="item.description"
+                    @delete="onActionItemDelete"
+                    @update="onActionItemUpdate"
+                  />
+                
+                </div>
+            </ul>
          
             </div>
           </ScrollPanel>
