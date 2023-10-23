@@ -10,6 +10,7 @@ import { ref } from "vue";
 
 import Form from "./Form.vue";
 import ActionItem from "./ActionItem.vue";
+import ActionItem2 from "./ActionItem2.vue";
 
 const actionItems = ref({});
 const growingId = ref(0);
@@ -244,7 +245,7 @@ function onActionItemUpdate(itemId, title, description) { //update
                   :key="key"
                 >
                 
-                  <ActionItem
+                  <ActionItem2
                     :index="key"
                     :itemId="item.id"
                     :title="item.title"
@@ -309,10 +310,10 @@ function onActionItemUpdate(itemId, title, description) { //update
 /* .todos-card, .content {
   overflow-y: scroll;
 }  */
-.content {
+/* .content {
   overflow-y: scroll;
 } 
-
+*/
 .p-scrollpanel .p-scrollpanel-bar  {
   background:#4f83b7 !important;
 
@@ -320,7 +321,7 @@ function onActionItemUpdate(itemId, title, description) { //update
 
 .p-scrollpanel-bar {
   opacity: 1
-}
+} 
 
 
 

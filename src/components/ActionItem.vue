@@ -32,8 +32,8 @@ function onActionItemUpdate() {
 <template>
   <li>
   <!-- <Panel> -->
-  <div class="card" id="actionItemCard" style="width: 100%">
-    <div class="card-body">
+  <!-- <div class="card" id="actionItemCard" style="width: 100%">
+    <div class="card-body"> -->
       <!-- Edit Mode -->
       <div v-if="isEditing">
         <form @submit.prevent="onActionItemUpdate">
@@ -79,8 +79,8 @@ function onActionItemUpdate() {
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    <!-- </div>
+  </div> -->
 <!-- </Panel> -->
 </li>
 </template>
